@@ -190,9 +190,15 @@
 
     .grad {
       background: linear-gradient(120deg, #1f6fbf 0%, #4a97e0 50%, #7cb8f0 100%);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      animation: gshift 9s ease-in-out infinite;
+    }
+    @keyframes gshift {
+      0%, 100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
     }
 
     .card {
@@ -518,6 +524,11 @@
       animation-delay: calc(0.25s + var(--i) * 0.14s);
     }
     @keyframes up { to { transform: none; } }
+    h1 .ln > span.grad {
+      animation: up 0.9s cubic-bezier(.2, .8, .2, 1) forwards,
+                 gshift 9s ease-in-out 1.4s infinite;
+      animation-delay: calc(0.25s + var(--i) * 0.14s), 1.4s;
+    }
 
     .lead {
       font-size: 1.1rem;
@@ -1589,7 +1600,205 @@
                   transform 0.8s cubic-bezier(.2, .8, .2, 1);
       transition-delay: calc(var(--i, 0) * 90ms);
     }
+    .rv.rv-l:not(.in) { transform: translateX(-40px); }
+    .rv.rv-r:not(.in) { transform: translateX(40px); }
+    .rv.rv-s:not(.in) { transform: translateY(36px) scale(0.95); }
     .rv.in { opacity: 1; transform: none; }
+
+    /* Setelah animasi masuk selesai: hilangkan delay & aktifkan hover normal */
+    .rv.done { transition-delay: 0s; }
+    .pc.rv.done {
+      transition: transform 0.45s cubic-bezier(.2, .8, .2, 1), box-shadow 0.45s, border-color 0.45s;
+    }
+    .pc.rv.done:hover {
+      transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-10px);
+    }
+    .sg.rv.done { transition: transform 0.4s, box-shadow 0.4s; }
+    .sg.rv.done:hover { transform: translateY(-6px); }
+    .ti.rv.done { transition: transform 0.35s, box-shadow 0.35s; }
+    .ti.rv.done:hover { transform: translateX(4px); }
+
+    /* ═══════════════════════════════════════════════════════════
+       14B · ANIMASI TAMBAHAN
+       ═══════════════════════════════════════════════════════════ */
+    .progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      z-index: 100;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: linear-gradient(90deg, #2f7fd1, #5aa5e8, #a8d0f5);
+      box-shadow: 0 0 10px rgba(47, 127, 209, 0.5);
+      pointer-events: none;
+    }
+
+    nav { animation: navIn 0.8s cubic-bezier(.2, .8, .2, 1) backwards; }
+    @keyframes navIn { from { opacity: 0; transform: translateY(-24px); } }
+
+    .blob { transition: translate 1.2s ease-out; }
+    .ph { animation: floaty 7s ease-in-out infinite; }
+    @keyframes floaty { 50% { translate: 0 -10px; } }
+
+    .role {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 1.8em;
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+    .role b { color: var(--acc); font-weight: 800; }
+    .role-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--acc);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(47, 127, 209, 0.5); }
+      70%  { box-shadow: 0 0 0 10px rgba(47, 127, 209, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(47, 127, 209, 0); }
+    }
+    .caret {
+      width: 2px; height: 1.2em;
+      margin-left: -6px;
+      background: var(--acc);
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .scroll-cue {
+      position: absolute;
+      left: 50%; bottom: 20px;
+      translate: -50% 0;
+      width: 26px; height: 42px;
+      display: grid;
+      justify-items: center;
+      padding-top: 8px;
+      border: 2px solid var(--mut-2);
+      border-radius: 20px;
+      opacity: 0.55;
+      transition: opacity 0.3s;
+    }
+    .scroll-cue:hover { opacity: 1; }
+    .scroll-cue span {
+      width: 4px; height: 8px;
+      border-radius: 4px;
+      background: var(--acc);
+      animation: cue 1.8s ease-in-out infinite;
+    }
+    @keyframes cue {
+      0%   { transform: translateY(0);    opacity: 0; }
+      30%  { opacity: 1; }
+      100% { transform: translateY(14px); opacity: 0; }
+    }
+
+    .stats {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stat {
+      padding: 22px 16px;
+      text-align: center;
+      background: var(--card-solid);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--sh-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat:hover { transform: translateY(-4px); box-shadow: var(--sh); }
+    .stat b {
+      display: block;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      background: linear-gradient(120deg, var(--acc), var(--acc-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .stat span { font-size: 0.88rem; font-weight: 600; color: var(--mut); }
+    @media (max-width: 480px) {
+      .stats { gap: 10px; }
+      .stat { padding: 16px 8px; }
+      .stat span { font-size: 0.78rem; }
+    }
+
+    .ul {
+      font-weight: 700;
+      color: var(--ink);
+      padding-bottom: 2px;
+      background-image: linear-gradient(90deg, var(--acc), var(--acc-2));
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: 0% 3px;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      transition: background-size 0.9s cubic-bezier(.2, .8, .2, 1);
+      transition-delay: calc(0.7s + var(--u, 0) * 0.3s);
+    }
+    .in .ul { background-size: 100% 3px; }
+
+    .pc, .sg { position: relative; }
+    .spot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(90, 165, 232, 0.16), transparent 45%);
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .spot:hover::before { opacity: 1; }
+    .pc.gold::before {
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(212, 160, 45, 0.2), transparent 45%);
+    }
+
+    .btn { transition: transform 0.3s, box-shadow 0.3s, background 0.3s, translate 0.25s ease-out; }
+    .btn.p::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -75%;
+      width: 50%; height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transform: skewX(-20deg);
+      pointer-events: none;
+    }
+    .btn.p:hover::after { animation: shine 0.8s ease; }
+    @keyframes shine { to { left: 130%; } }
+
+    .sg:not(.in) .pl { opacity: 0; }
+    .sg.in .pl {
+      animation: pop 0.55s cubic-bezier(.34, 1.56, .64, 1) backwards;
+      animation-delay: calc(0.2s + var(--k, 0) * 80ms + var(--i, 0) * 100ms);
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(0.85); } }
+
+    .tl::before {
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 1.6s cubic-bezier(.2, .8, .2, 1);
+    }
+    .tl.drawn::before { transform: scaleY(1); }
+    .ti::before { transition: transform 0.3s, box-shadow 0.3s; }
+    .ti:hover::before { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(47, 127, 209, 0.18); }
+
+    .modal-overlay.open .file-card {
+      animation: detailIn 0.5s cubic-bezier(.2, .8, .2, 1) backwards;
+      animation-delay: calc(0.12s + var(--k, 0) * 90ms);
+    }
+    .file-detail.on .tugas-item {
+      animation: detailIn 0.45s cubic-bezier(.2, .8, .2, 1) backwards;
+      animation-delay: calc(var(--k, 0) * 55ms);
+    }
 
     /* ═══════════════════════════════════════════════════════════
        15 · RESPONSIVE
@@ -1787,6 +1996,9 @@
       }
       html { scroll-behavior: auto; }
       .rv, h1 .ln > span { opacity: 1; transform: none; }
+      .sg .pl { opacity: 1 !important; }
+      .ul { background-size: 100% 3px; }
+      .progress { display: none; }
     }
   </style>
 </head>
@@ -1794,6 +2006,7 @@
 <body>
   <div class="blob a"></div>
   <div class="blob b"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
 
   <nav id="nav">
     <div class="wrap" style="padding:0;">
@@ -1850,15 +2063,16 @@
               <span style="--i:1" class="grad">&amp; UI Designer</span>
             </span>
           </h1>
-          <p class="lead rv" style="--i:2">
-            Saya adalah siswa Rekayasa Perangkat Lunak yang tertarik pada pengembangan website,
-            desain antarmuka, dan pembuatan solusi digital yang menarik serta mudah digunakan.
+          <p class="role rv" style="--i:2" aria-hidden="true"><span class="role-dot"></span>Fokus pada <b id="typed"></b><span class="caret"></span></p>
+          <p class="lead rv" style="--i:3">
+            Saya adalah siswa <span class="ul" style="--u:0">Rekayasa Perangkat Lunak</span> yang tertarik pada <span class="ul" style="--u:1">pengembangan website</span>,
+            <span class="ul" style="--u:2">desain antarmuka</span>, dan pembuatan solusi digital yang menarik serta mudah digunakan.
           </p>
-          <div class="cta rv" style="--i:3">
+          <div class="cta rv" style="--i:4">
             <a class="btn p" href="#projects">Explore Projects</a>
             <a class="btn" href="#contact">Get In Touch</a>
           </div>
-          <div class="soc rv" style="--i:4" id="soc"></div>
+          <div class="soc rv" style="--i:5" id="soc"></div>
         </div>
         <div class="ph rv" style="--i:2">
           <div class="ph-fx" aria-hidden="true">
@@ -1888,6 +2102,7 @@
           </div>
         </div>
       </div>
+      <a class="scroll-cue" href="#about" aria-label="Scroll ke bawah"><span></span></a>
     </section>
 
     <!-- 02 · ABOUT -->
@@ -1896,12 +2111,17 @@
         <h2 class="rv">A Little <span class="grad">About Me</span></h2>
         <p class="sub rv" style="--i:1">Pelajar RPL yang senang belajar, membangun, dan merancang.</p>
         <div class="about">
-          <div class="card rv" style="--i:2">
-            <p>Saya Rizki Ramdani, siswa SMKN 1 Cipeundeuy jurusan Rekayasa Perangkat Lunak. Saya senang mempelajari teknologi, mengembangkan website, dan merancang tampilan antarmuka yang menarik.</p>
-            <p>Melalui berbagai proyek, saya terus mengembangkan kemampuan teknis, kreativitas, dan kerja sama tim sebagai persiapan memasuki dunia profesional.</p>
+          <div class="card rv rv-l" style="--i:2">
+            <p>Saya Rizki Ramdani, siswa SMKN 1 Cipeundeuy jurusan <span class="ul" style="--u:0">Rekayasa Perangkat Lunak</span>. Saya senang mempelajari teknologi, <span class="ul" style="--u:1">mengembangkan website</span>, dan <span class="ul" style="--u:2">merancang tampilan antarmuka</span> yang menarik.</p>
+            <p>Melalui berbagai proyek, saya terus mengembangkan kemampuan teknis, kreativitas, dan <span class="ul" style="--u:0">kerja sama tim</span> sebagai persiapan memasuki <span class="ul" style="--u:1">dunia profesional</span>.</p>
           </div>
-          <div class="card rv" style="--i:3; padding: 18px 28px">
+          <div class="card rv rv-r" style="--i:3; padding: 18px 28px">
             <dl id="facts"></dl>
+          </div>
+          <div class="stats rv" style="--i:4">
+            <div class="stat"><b id="statProj" data-count="0">0</b><span>Proyek</span></div>
+            <div class="stat"><b id="statSkill" data-count="0">0</b><span>Skill</span></div>
+            <div class="stat"><b id="statTask" data-count="0">0</b><span>Tugas Pra Ujikom</span></div>
           </div>
         </div>
       </div>
@@ -1930,11 +2150,11 @@
       <div class="wrap">
         <div class="two">
           <div>
-            <h2 class="rv">My <span class="grad">Experience</span></h2>
+            <h2 class="rv rv-l">My <span class="grad">Experience</span></h2>
             <div class="tl" id="exp"></div>
           </div>
           <div>
-            <h2 class="rv">My <span class="grad">Education</span></h2>
+            <h2 class="rv rv-r">My <span class="grad">Education</span></h2>
             <div class="tl" id="edu"></div>
           </div>
         </div>
@@ -1947,7 +2167,7 @@
         <div class="ct card rv">
           <div>
             <h2>Let's <span class="grad">Connect!</span></h2>
-            <p>Punya ide menarik atau ingin berkolaborasi? Hubungi saya dan mari buat sesuatu yang bermanfaat bersama.</p>
+            <p>Punya ide menarik atau ingin <span class="ul" style="--u:0">berkolaborasi</span>? Hubungi saya dan mari buat <span class="ul" style="--u:1">sesuatu yang bermanfaat</span> bersama.</p>
             <a class="mail" id="mail" href="#"></a>
             <div class="cta">
               <a class="btn p" id="mailbtn" href="#">Email Me</a>
@@ -2061,7 +2281,7 @@
         role: "UI/UX Researcher", year: "2026",
         d: "Menyusun case study untuk mendokumentasikan proses perancangan dan pengembangan sebuah proyek digital — mulai dari latar belakang masalah, riset pengguna, solusi desain, hingga hasil akhir. Case study ini menjadi portofolio profesional yang menjelaskan proses berpikir dan dampak dari setiap keputusan desain.",
         k: ["Case Study", "Research", "Documentation"], img: "case_study.png",
-        u: "https://case-stady.netlify.app", btn: "View Case Study",
+        u: "https://rizkiramdani111108-wq.github.io/case-study/", btn: "View Case Study",
         gold: true,
         c: ["#f7e7a8", "#d4a02d"]
       }
@@ -2249,9 +2469,9 @@
     $("#facts").innerHTML = FACTS.map(f => `<div><dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd></div>`).join("");
 
     $("#sk").innerHTML = SKILLS.map((g, gi) => `
-      <div class="card sg rv" style="--i:${gi}">
+      <div class="card sg spot rv" style="--i:${gi}">
         <h3>${esc(g.g)}</h3>
-        <div class="pills">${g.i.map(s => `<span class="pl"><b>${s[1]}</b>${esc(s[0])}</span>`).join("")}</div>
+        <div class="pills">${g.i.map((s, si) => `<span class="pl" style="--k:${si}"><b>${s[1]}</b>${esc(s[0])}</span>`).join("")}</div>
       </div>
     `).join("");
 
@@ -2272,7 +2492,7 @@
         buttonsHTML = `<span class="btn off" aria-disabled="true" title="Tautan belum ditambahkan">${esc(p.btn)}</span>`;
       }
       return `
-        <article class="card pc rv${p.gold ? " gold" : ""}" style="--i:${i}">
+        <article class="card pc spot rv rv-s${p.gold ? " gold" : ""}" style="--i:${i}">
           <div class="im"><img loading="lazy" alt="Screenshot ${esc(p.t)}" src="${p.img || art(p.c, "Preview Proyek")}"></div>
           <div class="tx">
             <h3>${esc(p.t)}</h3>
@@ -2333,7 +2553,11 @@
     /* G · REVEAL ON SCROLL */
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+          setTimeout(() => e.target.classList.add("done"), 1300);
+        }
       });
     }, { threshold: 0.12 });
     $$(".rv").forEach(e => io.observe(e));
@@ -2401,7 +2625,7 @@
       const descDefault = modalDesc.textContent;
 
       cardsWrap.innerHTML = PRAUJIKOM_FILES.map((file, fi) => `
-        <button class="file-card" data-file="${fi}" aria-label="Buka ${esc(file.nama)}">
+        <button class="file-card" style="--k:${fi}" data-file="${fi}" aria-label="Buka ${esc(file.nama)}">
           <span class="file-card-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -2436,7 +2660,7 @@
           </div>
           <div class="tugas-grid">
             ${file.items.map((it, ii) => `
-              <div class="tugas-item">
+              <div class="tugas-item" style="--k:${ii}">
                 <span class="tugas-num">${ii + 1}</span>
                 <h5>${esc(it.t)}</h5>
                 <p>${esc(it.d)}</p>
@@ -2497,6 +2721,109 @@
           showFileList();
         }
       });
+    })();
+
+
+    /* ═══════════════════════════════════════════════════════════
+       L · ANIMASI TAMBAHAN
+       ═══════════════════════════════════════════════════════════ */
+    (function initMotion() {
+      const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      /* Progress scroll */
+      const bar = $("#progress");
+      const onScroll = () => {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        bar.style.transform = `scaleX(${h > 0 ? Math.min(scrollY / h, 1) : 0})`;
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onScroll);
+      onScroll();
+
+      /* Efek ketik pada hero */
+      const typed = $("#typed");
+      const words = ["Web Development", "UI Design", "UX Research", "Wireframing"];
+      if (RM) {
+        typed.textContent = words[0];
+      } else {
+        let w = 0, c = 0, del = false;
+        (function tick() {
+          const word = words[w];
+          c += del ? -1 : 1;
+          typed.textContent = word.slice(0, c);
+          let delay = del ? 40 : 85;
+          if (!del && c === word.length) { del = true; delay = 1600; }
+          else if (del && c === 0) { del = false; w = (w + 1) % words.length; delay = 350; }
+          setTimeout(tick, delay);
+        })();
+      }
+
+      /* Count-up (angka dihitung dari data di atas) */
+      $("#statProj").dataset.count  = PROJECTS.length;
+      $("#statSkill").dataset.count = SKILLS.reduce((n, g) => n + g.i.length, 0);
+      $("#statTask").dataset.count  = PRAUJIKOM_FILES.reduce((n, f) => n + f.items.length, 0);
+
+      const cio = new IntersectionObserver(entries => entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        const el = e.target, to = +el.dataset.count;
+        if (RM) { el.textContent = to; return; }
+        const t0 = performance.now(), dur = 1400;
+        (function step(t) {
+          const p = Math.min((t - t0) / dur, 1);
+          el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      }), { threshold: 0.6 });
+      $$("[data-count]").forEach(el => cio.observe(el));
+
+      /* Garis timeline menggambar saat terlihat */
+      const tio = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add("drawn"); tio.unobserve(e.target); }
+      }), { threshold: 0.15 });
+      $$(".tl").forEach(t => tio.observe(t));
+
+      /* Efek interaktif (hanya perangkat dengan mouse) */
+      if (!fine) return;
+
+      $$(".spot").forEach(el => el.addEventListener("pointermove", e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        el.style.setProperty("--my", (e.clientY - r.top) + "px");
+      }));
+
+      if (RM) return;
+
+      $$(".pc").forEach(el => {
+        el.addEventListener("pointermove", e => {
+          const r = el.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          el.style.setProperty("--ry", (x * 6) + "deg");
+          el.style.setProperty("--rx", (-y * 6) + "deg");
+        });
+        el.addEventListener("pointerleave", () => {
+          el.style.setProperty("--rx", "0deg");
+          el.style.setProperty("--ry", "0deg");
+        });
+      });
+
+      $$(".cta .btn, .mag").forEach(b => {
+        b.addEventListener("pointermove", e => {
+          const r = b.getBoundingClientRect();
+          b.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.18}px ${(e.clientY - r.top - r.height / 2) * 0.25}px`;
+        });
+        b.addEventListener("pointerleave", () => { b.style.translate = ""; });
+      });
+
+      const blobs = $$(".blob");
+      addEventListener("pointermove", e => {
+        const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+        blobs.forEach((b, i) => {
+          const k = i ? -1 : 1;
+          b.style.translate = `${x * 40 * k}px ${y * 30 * k}px`;
+        });
+      }, { passive: true });
     })();
   </script>
 </body>
